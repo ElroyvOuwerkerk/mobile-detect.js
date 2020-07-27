@@ -1,4 +1,4 @@
-// THIS FILE IS GENERATED - DO NOT EDIT!
+  // THIS FILE IS GENERATED - DO NOT EDIT!
 /*!mobile-detect v1.4.4 2019-09-21*/
 /*global module:false, define:false*/
 /*jshint latedef:false*/
@@ -985,8 +985,38 @@ define(function () {
 
     // should not be replaced by a completely new object - just overwrite existing methods
     MobileDetect._impl = impl;
-    
     MobileDetect.version = '1.4.4 2019-09-21';
+
+    // initialize the script for data layer
+    const md = new MobileDetect(window.navigator.userAgent);
+    const userAgentData = {
+      mobile: md.mobile(),
+      phone: !!((md.phone() || md.mobile()) && !md.tablet()),
+      tablet: !!md.tablet(),
+      userAgent: md.userAgent(),
+      os: md.os(),
+      isIphone: md.is("iPhone"),
+      isBot: md.is("bot"),
+      versionWebkit: md.version("Webkit"),
+      versionStrBuild: md.versionStr("Build"),
+      match: md.match("playstation|xbox"),
+    };
+
+    let deviceType;
+    if (userAgentData.phone) {
+      deviceType = "phone";
+    } else if (userAgentData.tablet) {
+      deviceType = "tablet";
+    } else {
+      deviceType = "desktop";
+    }
+  
+    userAgentData.deviceType = deviceType;
+
+    if (!userAgentData.isBot) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ userAgentData });
+    }
 
     return MobileDetect;
 }); // end of call of define()
